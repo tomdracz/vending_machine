@@ -6,4 +6,8 @@ class Product
     @price = price
     @quantity = quantity
   end
+
+  def restock(amount = 1)
+    @quantity += amount
+  end
 end
