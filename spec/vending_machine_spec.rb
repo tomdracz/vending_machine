@@ -44,5 +44,13 @@ RSpec.describe VendingMachine do
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
     end
+
+    it 'prints an error if valid index is provided, but not matching any product' do
+      allow(STDIN).to receive(:gets) { '4' }
+      allow(STDOUT).to receive(:puts)
+      subject.get_customer_selection
+      expect(subject.customer_selection).to be_nil
+      expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
+    end
   end
 end
