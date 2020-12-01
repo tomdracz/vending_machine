@@ -1,7 +1,7 @@
 require_relative "../lib/product"
 
 RSpec.describe Product do
-  subject { described_class.new('Crisps', 60, 1)}
+  subject { described_class.new('Crisps', 60, 1) }
   describe "#initialize" do
     it "has a name" do
       expect(subject.name).to eq('Crisps')
@@ -30,6 +30,24 @@ RSpec.describe Product do
     it "is restocked by 1 if quantity is omitted" do
       expect { subject.restock }.to change { subject.quantity }.by(1)
       expect(subject.quantity).to eq(2)
+    end
+  end
+
+  describe "#remove" do
+    let(:another_product) { described_class.new('Coke', 60, 5) }
+    it "allows for given quantity of product to be removed" do
+      expect { another_product.remove(2) }.to change { another_product.quantity }.by(-2)
+      expect(another_product.quantity).to eq(3)
+    end
+
+    it "removes one product from quantity if quantity is omitted" do
+      expect { another_product.remove }.to change { another_product.quantity }.by(-1)
+      expect(another_product.quantity).to eq(4)
+    end
+
+    it "prevents removal of more products than current quantity available" do
+      expect { another_product.remove(6) }.to raise_error(/Cannot remove more products then available/)
+      expect(another_product.quantity).to eq(5)
     end
   end
 end
