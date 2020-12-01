@@ -1,4 +1,4 @@
-require_relative "../lib/change_holder"
+require_relative '../lib/change_holder'
 
 RSpec.describe ChangeHolder do
   let(:coins) do
@@ -41,6 +41,7 @@ RSpec.describe ChangeHolder do
   describe '#return_coin' do
     it 'returns array of returned coin values' do
       expect(subject.return_coin(100, 3)).to eq([100, 100, 100])
+      expect(subject.return_coin(200)).to eq([200])
     end
     it 'decrements the desired coin value by a given amount' do
       expect { subject.return_coin(100, 3) }.to change { subject.coins[100] }.by(-3)
