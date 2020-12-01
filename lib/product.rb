@@ -10,4 +10,11 @@ class Product
   def restock(amount = 1)
     @quantity += amount
   end
+  
+  def remove(amount = 1)
+    if (amount > quantity)
+      raise "Cannot remove more products then available"
+    end
+    @quantity -= amount
+  end
 end
