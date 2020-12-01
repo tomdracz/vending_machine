@@ -21,4 +21,20 @@ RSpec.describe ChangeHolder do
       expect(subject.coins).to eq(coins)
     end
   end
+
+  describe '#insert_coin' do
+    it 'increments the desired coin value by a given amount' do
+      expect { subject.insert_coin(200, 20) }.to change { subject.coins[200] }.by(20)
+      expect(subject.coins[200]).to eq(40)
+    end
+
+    it 'increments the desired coin value by 1 if amount is omitted' do
+      expect { subject.insert_coin(200) }.to change { subject.coins[200] }.by(1)
+      expect(subject.coins[200]).to eq(21)
+    end
+
+    it 'raises an error if an invalid coin value is provided' do
+      expect { subject.insert_coin(140) }.to raise_error(/Invalid coin provided/)
+    end
+  end
 end
