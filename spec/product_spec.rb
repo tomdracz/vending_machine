@@ -20,4 +20,16 @@ RSpec.describe Product do
       expect(another_product.quantity).to eq(1)
     end
   end
+
+  describe "#restock" do
+    it "can be restocked by a given quantity" do
+      expect { subject.restock(2) }.to change { subject.quantity }.by(2)
+      expect(subject.quantity).to eq(3)
+    end
+
+    it "is restocked by 1 if quantity is omitted" do
+      expect { subject.restock }.to change { subject.quantity }.by(1)
+      expect(subject.quantity).to eq(2)
+    end
+  end
 end
