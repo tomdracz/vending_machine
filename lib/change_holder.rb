@@ -8,22 +8,17 @@ class ChangeHolder
   end
 
   def insert_coin(value, amount = 1)
-    unless VALID_COIN_VALUES.include?(value)
-      raise "Invalid coin provided"
-    end
+    raise 'Invalid coin provided' unless VALID_COIN_VALUES.include?(value)
+
     coins[value] += amount
   end
 
   def return_coin(value, amount = 1)
-    unless VALID_COIN_VALUES.include?(value)
-      raise "Invalid coin provided"
-    end
+    raise 'Invalid coin provided' unless VALID_COIN_VALUES.include?(value)
 
-    if amount > coins[value]
-      raise "Cannot return the requested amount of coins"
-    end
+    raise 'Cannot return the requested amount of coins' if amount > coins[value]
 
     coins[value] -= amount
-    return Array.new(amount, value)
+    Array.new(amount, value)
   end
 end
