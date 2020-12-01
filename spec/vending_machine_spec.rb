@@ -30,4 +30,19 @@ RSpec.describe VendingMachine do
       expectation.to output(/Dr Pepper.*70/).to_stdout
     end
   end
+
+  describe '#get_customer_selection' do
+    it 'stores customer selection in a variable as index of selected product' do
+      allow(STDIN).to receive(:gets) { '1' }
+      expect(subject.get_customer_selection).to eq(0)
+    end
+
+    it 'prints an error if invalid code is selected' do
+      allow(STDIN).to receive(:gets) { 'foobar' }
+      allow(STDOUT).to receive(:puts)
+      subject.get_customer_selection
+      expect(subject.customer_selection).to be_nil
+      expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
+    end
+  end
 end
