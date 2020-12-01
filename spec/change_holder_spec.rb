@@ -1,3 +1,5 @@
+require_relative "../lib/change_holder"
+
 RSpec.describe ChangeHolder do
   let(:coins) do
     {
