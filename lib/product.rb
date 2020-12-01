@@ -17,4 +17,8 @@ class Product
     end
     @quantity -= amount
   end
+
+  def available?
+    quantity > 0
+  end
 end

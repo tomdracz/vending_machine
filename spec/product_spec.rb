@@ -50,4 +50,17 @@ RSpec.describe Product do
       expect(another_product.quantity).to eq(5)
     end
   end
+
+  describe "#available?" do
+    let(:another_product) { described_class.new('Coke', 60, 5) }
+    it "returns true if quantity of product is above 0" do
+      another_product.remove(4)
+      expect(another_product.available?).to be true
+    end
+
+    it "returns false if quantity of product is 0" do
+      another_product.remove(5)
+      expect(another_product.available?).to be false
+    end
+  end
 end
