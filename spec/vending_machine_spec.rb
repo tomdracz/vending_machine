@@ -2,7 +2,13 @@ require_relative '../lib/vending_machine'
 require_relative '../lib/product'
 
 RSpec.describe VendingMachine do
-  let(:inventory) { double('inventory') }
+  let(:inventory) do
+    [
+      Product.new('Crisps', 60, 10),
+      Product.new('Coke', 70, 10),
+      Product.new('Dr Pepper', 70, 0)
+    ]
+  end
   let(:change) { double('change') }
   subject { described_class.new(inventory, change) }
   describe '#initialize' do
@@ -16,13 +22,6 @@ RSpec.describe VendingMachine do
   end
 
   describe '#display_inventory' do
-    let(:inventory) do
-      [
-        Product.new('Crisps', 60, 10),
-        Product.new('Coke', 70, 10),
-        Product.new('Dr Pepper', 70, 0)
-      ]
-    end
     it 'shows the selection of current products with their prices' do
       expectation = expect { subject.display_inventory }
       expectation.to output(/Crisps.*60/).to_stdout

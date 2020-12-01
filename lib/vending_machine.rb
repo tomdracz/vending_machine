@@ -16,7 +16,7 @@ class VendingMachine
   def get_customer_selection
     selection = STDIN.gets.chomp
     product_index = selection.to_i - 1
-    if product_index >= 0
+    if product_index >= 0 && product_index < inventory.size
       return @customer_selection = product_index
     else
       puts "Invalid code selected. Please try again"
