@@ -15,12 +15,17 @@ class VendingMachine
 
   def vend
     loop do
+      display_welcome_message
       display_inventory
       get_customer_selection
       collect_coins
       dispense_product
       return_change
     end
+  end
+
+  def display_welcome_message
+    puts "Welcome to the Vending Machine. Please see the products available"
   end
 
   def display_inventory
