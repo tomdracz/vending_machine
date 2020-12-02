@@ -27,7 +27,7 @@ RSpec.describe VendingMachine do
       allow(subject).to receive(:display_welcome_message)
       allow(subject).to receive(:display_inventory)
       allow(subject).to receive(:get_customer_selection)
-      allow(subject).to receive(:process_user_selection)
+      allow(subject).to receive(:process_customer_selection)
       allow(subject).to receive(:loop).and_yield
 
       subject.vend
@@ -35,11 +35,11 @@ RSpec.describe VendingMachine do
       expect(subject).to have_received(:display_welcome_message).once
       expect(subject).to have_received(:display_inventory).once
       expect(subject).to have_received(:get_customer_selection).once
-      expect(subject).to have_received(:process_user_selection).once
+      expect(subject).to have_received(:process_customer_selection).once
     end
   end
 
-  describe '#process_user_selection' do
+  describe '#process_customer_selection' do
     before(:each) do
       allow(subject).to receive(:collect_coins)
       allow(subject).to receive(:dispense_product)
@@ -50,7 +50,7 @@ RSpec.describe VendingMachine do
 
     it 'goes through the vending process if item code has been selected' do
       allow(subject).to receive(:customer_selection) { 1 }
-      subject.process_user_selection
+      subject.process_customer_selection
       expect(subject).to have_received(:collect_coins)
       expect(subject).to have_received(:dispense_product)
       expect(subject).to have_received(:return_change)
@@ -60,7 +60,7 @@ RSpec.describe VendingMachine do
 
     it 'goes through the inventory restocking process if reload_products has been selected' do
       allow(subject).to receive(:customer_selection) { 'reload_products' }
-      subject.process_user_selection
+      subject.process_customer_selection
       expect(subject).to_not have_received(:collect_coins)
       expect(subject).to_not have_received(:dispense_product)
       expect(subject).to_not have_received(:return_change)
@@ -70,7 +70,7 @@ RSpec.describe VendingMachine do
 
     it 'goes through the change reload process if reload_change has been selected' do
       allow(subject).to receive(:customer_selection) { 'reload_change' }
-      subject.process_user_selection
+      subject.process_customer_selection
       expect(subject).to_not have_received(:collect_coins)
       expect(subject).to_not have_received(:dispense_product)
       expect(subject).to_not have_received(:return_change)
