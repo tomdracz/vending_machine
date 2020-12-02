@@ -13,6 +13,16 @@ class VendingMachine
     @inserted_coins = []
   end
 
+  def vend
+    loop do
+      display_inventory
+      get_customer_selection
+      collect_coins
+      dispense_product
+      return_change
+    end
+  end
+
   def display_inventory
     inventory.each_with_index do |product, index|
       puts format_product_for_display(product, index)
