@@ -43,6 +43,9 @@ class ChangeHolder
     end
 
     if returned_change.sum != change_required
+      returned_change.each do |coin_value|
+        insert_coin(coin_value)
+      end
       raise VendingMachineExceptions::NotEnoughChange
     end
     
