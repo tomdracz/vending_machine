@@ -35,6 +35,7 @@ class VendingMachine
   end
 
   def get_customer_selection
+    puts "Please enter the code of the item you wish to purchase"
     loop do
       break if @customer_selection
       selection = STDIN.gets.chomp
@@ -49,10 +50,12 @@ class VendingMachine
   end
 
   def collect_coins
+    puts "Please insert your coins entering pence value of a coin (i.e. 100 for £1)"
     price = selected_product.price
     collected_coins = []
     loop do
       break if collected_coins.sum >= price
+      puts "Product price is: #{price}. Inserted #{collected_coins.sum} so far"
 
       inserted_coin = STDIN.gets.chomp.to_i
       begin

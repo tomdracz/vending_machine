@@ -61,6 +61,13 @@ RSpec.describe VendingMachine do
   describe '#get_customer_selection' do
     before(:each) do
       allow(subject).to receive(:loop).and_yield
+      allow(STDOUT).to receive(:puts)
+    end
+
+    it 'displays info message' do
+      allow(STDIN).to receive(:gets) { '1' }
+      subject.get_customer_selection
+      expect(STDOUT).to have_received(:puts).with(/Please enter the code of the item you wish to purchase/)
     end
     it 'stores customer selection in a variable as index of selected product' do
       allow(STDIN).to receive(:gets) { '1' }
@@ -69,7 +76,6 @@ RSpec.describe VendingMachine do
 
     it 'prints an error if invalid code is selected' do
       allow(STDIN).to receive(:gets) { 'foobar' }
-      allow(STDOUT).to receive(:puts)
       subject.get_customer_selection
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
@@ -77,7 +83,6 @@ RSpec.describe VendingMachine do
 
     it 'prints an error if valid index is provided, but not matching any product' do
       allow(STDIN).to receive(:gets) { '4' }
-      allow(STDOUT).to receive(:puts)
       subject.get_customer_selection
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
@@ -85,7 +90,6 @@ RSpec.describe VendingMachine do
 
     it 'prints an error if valid index is provided, but product is sold out' do
       allow(STDIN).to receive(:gets) { '3' }
-      allow(STDOUT).to receive(:puts)
       subject.get_customer_selection
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
@@ -94,9 +98,19 @@ RSpec.describe VendingMachine do
 
   describe "#collect_coins" do
     before(:each) do
+      allow(STDOUT).to receive(:puts)
       allow(product).to receive(:price) { 100 }
       allow(subject).to receive(:selected_product) { product }
     end
+
+    it 'displays info message' do
+      allow(STDIN).to receive(:gets).and_return('50', '20', '20', '20')
+      allow(change).to receive(:insert_coin)
+      allow(subject).to receive(:loop).and_yield
+      subject.collect_coins
+      expect(STDOUT).to have_received(:puts).with(/Please insert your coins entering pence value of a coin/)
+    end
+  
     it 'allows customer to insert coins into the machine and returns entered coins' do
       allow(STDIN).to receive(:gets).and_return('50', '20', '20', '20')
       allow(change).to receive(:insert_coin)
@@ -107,7 +121,6 @@ RSpec.describe VendingMachine do
       allow(STDIN).to receive(:gets).and_return('50', '40')
       allow(change).to receive(:insert_coin).with(50)
       allow(change).to receive(:insert_coin).with(40).and_raise(VendingMachineExceptions::InvalidCoinError)
-      allow(STDOUT).to receive(:puts)
       allow(subject).to receive(:loop).and_yield.and_yield
       expect(subject.collect_coins).to eq([50])
       expect(STDOUT).to have_received(:puts).with(/Invalid coin inserted, please try again/).once
