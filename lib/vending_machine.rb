@@ -75,6 +75,10 @@ class VendingMachine
   private
 
   def format_product_for_display(product, index)
-    "Code #{index + 1}: #{product.name} - Price: #{product.price}"
+    if product.available?
+      "Code #{index + 1}: #{product.name} - Price: #{product.price}"
+    else
+      "Code #{index + 1}: #{product.name} - Price: SOLD OUT"
+    end
   end
 end

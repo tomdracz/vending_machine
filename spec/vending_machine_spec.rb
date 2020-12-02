@@ -46,7 +46,7 @@ RSpec.describe VendingMachine do
       expectation = expect { subject.display_inventory }
       expectation.to output(/Crisps.*60/).to_stdout
       expectation.to output(/Coke.*70/).to_stdout
-      expectation.to output(/Dr Pepper.*70/).to_stdout
+      expectation.to output(/Dr Pepper.*SOLD OUT/).to_stdout
     end
   end
 
