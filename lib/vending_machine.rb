@@ -36,6 +36,7 @@ class VendingMachine
 
   def get_customer_selection
     puts "Please enter the code of the item you wish to purchase"
+
     loop do
       break if @customer_selection
       selection = STDIN.gets.chomp
@@ -81,6 +82,45 @@ class VendingMachine
 
     returned_change = change.calculate_change(product_price, inserted_sum)
     puts "Here's your change: #{returned_change}"
+  end
+
+  def reload_products
+    puts "Here are the current products"
+    display_inventory
+    puts "Please enter the code of the item you want to reload"
+    reload_selection = nil
+    reload_quantity = nil
+
+    loop do
+      break if reload_selection
+      selection_input = STDIN.gets.chomp
+      product_index = selection_input.to_i - 1
+      if product_index >= 0 && product_index < inventory.size
+        reload_selection = product_index
+      else
+        puts 'Invalid code selected. Please try again'
+      end
+    end
+
+    puts "Enter the quantity you are reloading the item by"
+
+    loop do
+      break if reload_quantity
+      quantity_input = STDIN.gets.chomp
+      if quantity_input.to_i > 0
+        reload_quantity = quantity_input.to_i
+      else
+        puts "Invalid quantity entered. Must be a valid number above 0"
+      end
+    end
+    
+    if reload_selection && reload_quantity
+      inventory[reload_selection].restock(reload_quantity)
+    end
+    reload_selection = nil
+    reload_quantity = nil
+
+    puts "Restocked!"
   end
 
   private
