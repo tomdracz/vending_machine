@@ -23,6 +23,22 @@ class VendingMachine
     end
   end
 
+  def collect_coins(selected_product)
+    price = selected_product.price
+    collected_coins = []
+    loop do
+      break if collected_coins.sum >= price
+      inserted_coin = STDIN.gets.chomp.to_i
+      begin
+        change.insert_coin(inserted_coin)
+        collected_coins << inserted_coin
+      rescue
+        puts "Invalid coin inserted, please try again"
+      end
+    end
+    collected_coins
+  end
+
   private
 
   def format_product_for_display(product, index)
