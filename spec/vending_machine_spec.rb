@@ -9,6 +9,7 @@ RSpec.describe VendingMachine do
       Product.new('Dr Pepper', 70, 0)
     ]
   end
+  let(:product) { double('product') }
   let(:change) { double('change') }
   subject { described_class.new(inventory, change) }
   describe '#initialize' do
@@ -50,6 +51,27 @@ RSpec.describe VendingMachine do
       subject.get_customer_selection
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
+    end
+  end
+
+  describe "#collect_coins" do
+    before(:each) do
+      allow(product).to receive(:price) { 100 }
+    end
+    it 'allows customer to insert coins into the machine and returns entered coins' do
+      allow(STDIN).to receive(:gets).and_return('50', '20', '20', '20')
+      allow(change).to receive(:insert_coin)
+      expect(subject.collect_coins(product)).to eq([50, 20, 20, 20])
+      expect(change).to have_received(:insert_coin).exactly(4).times
+    end
+    it 'print an error message if an invalid coin has been inserted' do
+      allow(STDIN).to receive(:gets).and_return('50', '40')
+      allow(change).to receive(:insert_coin).with(50)
+      allow(change).to receive(:insert_coin).with(40).and_raise
+      allow(STDOUT).to receive(:puts)
+      allow(subject).to receive(:loop).and_yield.and_yield
+      expect(subject.collect_coins(product)).to eq([50])
+      expect(STDOUT).to have_received(:puts).with(/Invalid coin inserted, please try again/).once
     end
   end
 end
