@@ -22,8 +22,8 @@ RSpec.describe VendingMachine do
     end
   end
 
-  describe "#vend" do
-    it "runs through the vending cycle" do
+  describe '#vend' do
+    it 'runs through the vending cycle' do
       allow(subject).to receive(:display_welcome_message)
       allow(subject).to receive(:display_inventory)
       allow(subject).to receive(:get_customer_selection)
@@ -43,8 +43,8 @@ RSpec.describe VendingMachine do
     end
   end
 
-  describe "#display_welcome_message" do
-    it "displays welcome message in the output console" do
+  describe '#display_welcome_message' do
+    it 'displays welcome message in the output console' do
       expect { subject.display_welcome_message }.to output(/Welcome to the Vending Machine/).to_stdout
     end
   end
@@ -96,7 +96,7 @@ RSpec.describe VendingMachine do
     end
   end
 
-  describe "#collect_coins" do
+  describe '#collect_coins' do
     before(:each) do
       allow(STDOUT).to receive(:puts)
       allow(product).to receive(:price) { 100 }
@@ -110,7 +110,7 @@ RSpec.describe VendingMachine do
       subject.collect_coins
       expect(STDOUT).to have_received(:puts).with(/Please insert your coins entering pence value of a coin/)
     end
-  
+
     it 'allows customer to insert coins into the machine and returns entered coins' do
       allow(STDIN).to receive(:gets).and_return('50', '20', '20', '20')
       allow(change).to receive(:insert_coin)
@@ -127,12 +127,12 @@ RSpec.describe VendingMachine do
     end
   end
 
-  describe "#dispense_product" do
+  describe '#dispense_product' do
     before(:each) do
       allow(product).to receive(:name) { 'Crisps' }
       allow(product).to receive(:remove)
       allow(subject).to receive(:selected_product) { product }
-      allow(STDOUT).to receive(:puts)   
+      allow(STDOUT).to receive(:puts)
     end
 
     it 'returns selected product to the customer' do
@@ -142,12 +142,12 @@ RSpec.describe VendingMachine do
     end
   end
 
-  describe "#return_change" do
+  describe '#return_change' do
     let(:inserted_coins) { [50, 20, 20, 20] }
     before(:each) do
       allow(product).to receive(:price) { 100 }
       allow(change).to receive(:calculate_change) { [10] }
-      allow(STDOUT).to receive(:puts) 
+      allow(STDOUT).to receive(:puts)
       allow(subject).to receive(:inserted_coins) { inserted_coins }
       allow(subject).to receive(:selected_product) { product }
     end
@@ -161,6 +161,44 @@ RSpec.describe VendingMachine do
       allow(product).to receive(:price) { 110 }
       expect(change).to_not have_received(:calculate_change)
       expect(STDOUT).to_not have_received(:puts).with(/Here's your change/)
+    end
+  end
+
+  describe '#reload_products' do
+    let(:inventory) do
+      [
+        product
+      ]
+    end
+
+    before(:each) do
+      allow(subject).to receive(:loop).and_yield
+      allow(STDOUT).to receive(:puts)
+      allow(product).to receive(:available?) { true }
+      allow(product).to receive(:name) { 'Test' }
+      allow(product).to receive(:price) { 100 }
+      allow(product).to receive(:restock)
+    end
+    it 'asks user for item code and quantity to restock the item with and updates product quantities' do
+      allow(STDIN).to receive(:gets).and_return('1', '5')
+      subject.reload_products
+      expect(product).to have_received(:restock).once.with(5)
+      expect(STDOUT).to have_received(:puts).with(/Here are the current products/)
+      expect(STDOUT).to have_received(:puts).with(/Please enter the code of the item you want to reload/)
+      expect(STDOUT).to have_received(:puts).with(/Enter the quantity you are reloading the item by/)
+      expect(STDOUT).to have_received(:puts).with(/Restocked/)
+    end
+    it 'displays an error message if invalid item code is entered' do
+      allow(STDIN).to receive(:gets).and_return('99')
+      subject.reload_products
+      expect(product).to_not have_received(:restock)
+      expect(STDOUT).to have_received(:puts).with(/Invalid code selected. Please try again/)
+    end
+    it 'displays an error message if invalid item quantity is entered' do
+      allow(STDIN).to receive(:gets).and_return('1', '0')
+      subject.reload_products
+      expect(product).to_not have_received(:restock)
+      expect(STDOUT).to have_received(:puts).with(/Invalid quantity entered. Must be a valid number above 0/)
     end
   end
 end
