@@ -83,21 +83,26 @@ RSpec.describe ChangeHolder do
         2 => 5,
         1 => 5
       }
-      expect(subject.calculate_change(150, 200)).to eq([20, 20, 5, 2, 2, 1])
+      another_subject = described_class.new(coins)
+
+      expect(another_subject.calculate_change(150, 200)).to eq([20, 20, 5, 2, 2, 1])
     end
+
     it 'raises an error if needed change cannot be dispensed' do
       coins = {
         200 => 20,
         100 => 20,
         50 => 0,
-        20 => 5,
+        20 => 0,
         10 => 0,
         5 => 1,
-        2 => 5,
+        2 => 0,
         1 => 5
       }
 
-      expect { subject.calculate_change(150, 200) }.to raise_error(VendingMachineExceptions::NotEnoughChange, /Cannot dispense required amount of change/)
+      another_subject = described_class.new(coins)
+
+      expect { another_subject.calculate_change(150, 200) }.to raise_error(VendingMachineExceptions::NotEnoughChange, /Cannot dispense required amount of change/)
     end
   end
 end

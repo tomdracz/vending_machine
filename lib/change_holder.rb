@@ -25,4 +25,27 @@ class ChangeHolder
     coins[value] -= amount
     Array.new(amount, value)
   end
+
+  def calculate_change(product_price, inserted_sum)
+    change_required = inserted_sum - product_price
+    returned_change = []
+    remaining = change_required
+  
+    coins.each do |coin_value, coin_quantity|
+      next unless coin_value <= remaining && coin_quantity > 0
+
+      loop_times = [(remaining / coin_value), coin_quantity].min
+      loop_times.times do
+        returned_change << coin_value
+        remaining -= coin_value
+        return_coin(coin_value)
+      end
+    end
+
+    if returned_change.sum != change_required
+      raise VendingMachineExceptions::NotEnoughChange
+    end
+    
+    returned_change
+  end
 end
