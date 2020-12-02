@@ -57,11 +57,12 @@ RSpec.describe VendingMachine do
   describe "#collect_coins" do
     before(:each) do
       allow(product).to receive(:price) { 100 }
+      allow(subject).to receive(:selected_product) { product }
     end
     it 'allows customer to insert coins into the machine and returns entered coins' do
       allow(STDIN).to receive(:gets).and_return('50', '20', '20', '20')
       allow(change).to receive(:insert_coin)
-      expect(subject.collect_coins(product)).to eq([50, 20, 20, 20])
+      expect(subject.collect_coins).to eq([50, 20, 20, 20])
       expect(change).to have_received(:insert_coin).exactly(4).times
     end
     it 'print an error message if an invalid coin has been inserted' do
@@ -70,7 +71,7 @@ RSpec.describe VendingMachine do
       allow(change).to receive(:insert_coin).with(40).and_raise(VendingMachineExceptions::InvalidCoinError)
       allow(STDOUT).to receive(:puts)
       allow(subject).to receive(:loop).and_yield.and_yield
-      expect(subject.collect_coins(product)).to eq([50])
+      expect(subject.collect_coins).to eq([50])
       expect(STDOUT).to have_received(:puts).with(/Invalid coin inserted, please try again/).once
     end
   end
@@ -79,11 +80,12 @@ RSpec.describe VendingMachine do
     before(:each) do
       allow(product).to receive(:name) { 'Crisps' }
       allow(product).to receive(:remove)
+      allow(subject).to receive(:selected_product) { product }
       allow(STDOUT).to receive(:puts)   
     end
 
     it 'returns selected product to the customer' do
-      subject.dispense_product(product)
+      subject.dispense_product
       expect(product).to have_received(:remove).once
       expect(STDOUT).to have_received(:puts).with("Here's your product: #{product.name}")
     end
@@ -95,9 +97,11 @@ RSpec.describe VendingMachine do
       allow(product).to receive(:price) { 100 }
       allow(change).to receive(:calculate_change) { [10] }
       allow(STDOUT).to receive(:puts) 
+      allow(subject).to receive(:inserted_coins) { inserted_coins }
+      allow(subject).to receive(:selected_product) { product }
     end
     it 'returns correct change to the customer' do
-      subject.return_change(product, inserted_coins)
+      subject.return_change
       expect(change).to have_received(:calculate_change).with(100, 110)
       expect(STDOUT).to have_received(:puts).with("Here's your change: [10]")
     end

@@ -3,12 +3,14 @@ require_relative './vending_machine_exceptions'
 class VendingMachine
   include VendingMachineExceptions
 
-  attr_reader :inventory, :change, :customer_selection
+  attr_reader :inventory, :change, :customer_selection, :selected_product, :inserted_coins
 
   def initialize(inventory, change)
     @inventory = inventory
     @change = change
-    @customer_selection = customer_selection
+    @customer_selection = nil
+    @selected_product = nil
+    @inserted_coins = []
   end
 
   def display_inventory
@@ -21,34 +23,36 @@ class VendingMachine
     selection = STDIN.gets.chomp
     product_index = selection.to_i - 1
     if product_index >= 0 && product_index < inventory.size
-      return @customer_selection = product_index
+      @selected_product = inventory[product_index]
+      @customer_selection = product_index
     else
-      puts "Invalid code selected. Please try again"
+      puts 'Invalid code selected. Please try again'
     end
   end
 
-  def collect_coins(selected_product)
+  def collect_coins
     price = selected_product.price
     collected_coins = []
     loop do
       break if collected_coins.sum >= price
+
       inserted_coin = STDIN.gets.chomp.to_i
       begin
         change.insert_coin(inserted_coin)
         collected_coins << inserted_coin
       rescue VendingMachineExceptions::InvalidCoinError
-        puts "Invalid coin inserted, please try again"
+        puts 'Invalid coin inserted, please try again'
       end
     end
-    collected_coins
+    @inserted_coins = collected_coins
   end
 
-  def dispense_product(selected_product)
+  def dispense_product
     selected_product.remove
     puts "Here's your product: #{selected_product.name}"
   end
 
-  def return_change(selected_product, inserted_coins)
+  def return_change
     inserted_sum = inserted_coins.sum
     product_price = selected_product.price
     returned_change = change.calculate_change(product_price, inserted_sum)
