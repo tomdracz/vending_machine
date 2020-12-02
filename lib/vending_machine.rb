@@ -35,12 +35,18 @@ class VendingMachine
   end
 
   def get_customer_selection
-    puts 'Please enter the code of the item you wish to purchase'
+    puts 'Please enter the code of the item you wish to purchase. Enter `reload_products` or `reload_change` to restock products and reload change respectively'
 
     loop do
       break if @customer_selection
 
       selection = STDIN.gets.chomp
+
+      if ['reload_change', 'reload_products'].include?(selection)
+        @customer_selection = selection
+        break
+      end
+
       product_index = selection.to_i - 1
       if product_index >= 0 && product_index < inventory.size && inventory[product_index].available?
         @selected_product = inventory[product_index]
