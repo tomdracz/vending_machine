@@ -43,6 +43,11 @@ class VendingMachine
     collected_coins
   end
 
+  def dispense_product(selected_product)
+    selected_product.remove
+    puts "Here's your product: #{selected_product.name}"
+  end
+
   private
 
   def format_product_for_display(product, index)

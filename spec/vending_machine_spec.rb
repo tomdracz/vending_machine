@@ -74,4 +74,18 @@ RSpec.describe VendingMachine do
       expect(STDOUT).to have_received(:puts).with(/Invalid coin inserted, please try again/).once
     end
   end
+
+  describe "#dispense_product" do
+    before(:each) do
+      allow(product).to receive(:name) { 'Crisps' }
+      allow(product).to receive(:remove)
+      allow(STDOUT).to receive(:puts)   
+    end
+
+    it 'returns selected product to the customer' do
+      subject.dispense_product(product)
+      expect(product).to have_received(:remove).once
+      expect(STDOUT).to have_received(:puts).with("Here's your product: #{product.name}")
+    end
+  end
 end
