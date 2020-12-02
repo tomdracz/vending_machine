@@ -71,7 +71,20 @@ RSpec.describe VendingMachine do
     end
     it 'stores customer selection in a variable as index of selected product' do
       allow(STDIN).to receive(:gets) { '1' }
-      expect(subject.get_customer_selection).to eq(0)
+      subject.get_customer_selection
+      expect(subject.customer_selection).to eq(0)
+    end
+
+    it 'allows customer to enter code for restocking inventory' do
+      allow(STDIN).to receive(:gets) { 'reload_products' }
+      subject.get_customer_selection
+      expect(subject.customer_selection).to eq('reload_products')
+    end
+
+    it 'allows customer to enter code for reloading coins' do
+      allow(STDIN).to receive(:gets) { 'reload_change' }
+      subject.get_customer_selection
+      expect(subject.customer_selection).to eq('reload_change')
     end
 
     it 'prints an error if invalid code is selected' do
