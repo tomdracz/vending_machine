@@ -67,6 +67,7 @@ class VendingMachine
       dispense_product
       return_change
     end
+    customer_selection = nil
   end
 
   def collect_coins
