@@ -3,7 +3,8 @@ require_relative './vending_machine_exceptions'
 class VendingMachine
   include VendingMachineExceptions
 
-  attr_reader :inventory, :change, :customer_selection, :selected_product, :inserted_coins
+  attr_reader :inventory, :change, :selected_product, :inserted_coins
+  attr_accessor :customer_selection
 
   def initialize(inventory, change)
     @inventory = inventory
@@ -18,9 +19,7 @@ class VendingMachine
       display_welcome_message
       display_inventory
       get_customer_selection
-      collect_coins
-      dispense_product
-      return_change
+      process_customer_selection
     end
   end
 
@@ -54,6 +53,19 @@ class VendingMachine
       else
         puts 'Invalid code selected. Please try again'
       end
+    end
+  end
+
+  def process_customer_selection
+    case customer_selection
+    when 'reload_change'
+      reload_change
+    when 'reload_products'
+      reload_products
+    else
+      collect_coins
+      dispense_product
+      return_change
     end
   end
 
