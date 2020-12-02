@@ -48,6 +48,13 @@ class VendingMachine
     puts "Here's your product: #{selected_product.name}"
   end
 
+  def return_change(selected_product, inserted_coins)
+    inserted_sum = inserted_coins.sum
+    product_price = selected_product.price
+    returned_change = change.calculate_change(product_price, inserted_sum)
+    puts "Here's your change: #{returned_change}"
+  end
+
   private
 
   def format_product_for_display(product, index)

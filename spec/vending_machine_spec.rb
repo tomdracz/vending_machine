@@ -88,4 +88,18 @@ RSpec.describe VendingMachine do
       expect(STDOUT).to have_received(:puts).with("Here's your product: #{product.name}")
     end
   end
+
+  describe "#return_change" do
+    let(:inserted_coins) { [50, 20, 20, 20] }
+    before(:each) do
+      allow(product).to receive(:price) { 100 }
+      allow(change).to receive(:calculate_change) { [10] }
+      allow(STDOUT).to receive(:puts) 
+    end
+    it 'returns correct change to the customer' do
+      subject.return_change(product, inserted_coins)
+      expect(change).to have_received(:calculate_change).with(100, 110)
+      expect(STDOUT).to have_received(:puts).with("Here's your change: [10]")
+    end
+  end
 end
