@@ -32,6 +32,9 @@ RSpec.describe VendingMachine do
   end
 
   describe '#get_customer_selection' do
+    before(:each) do
+      allow(subject).to receive(:loop).and_yield
+    end
     it 'stores customer selection in a variable as index of selected product' do
       allow(STDIN).to receive(:gets) { '1' }
       expect(subject.get_customer_selection).to eq(0)
