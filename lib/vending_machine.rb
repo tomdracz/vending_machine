@@ -1,4 +1,8 @@
+require_relative './vending_machine_exceptions'
+
 class VendingMachine
+  include VendingMachineExceptions
+
   attr_reader :inventory, :change, :customer_selection
 
   def initialize(inventory, change)
@@ -32,7 +36,7 @@ class VendingMachine
       begin
         change.insert_coin(inserted_coin)
         collected_coins << inserted_coin
-      rescue
+      rescue VendingMachineExceptions::InvalidCoinError
         puts "Invalid coin inserted, please try again"
       end
     end

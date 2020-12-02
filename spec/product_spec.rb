@@ -46,7 +46,7 @@ RSpec.describe Product do
     end
 
     it 'prevents removal of more products than current quantity available' do
-      expect { another_product.remove(6) }.to raise_error(/Cannot remove more products then available/)
+      expect { another_product.remove(6) }.to raise_error(VendingMachineExceptions::ProductRemoveError, /Cannot remove more products then available/)
       expect(another_product.quantity).to eq(5)
     end
   end

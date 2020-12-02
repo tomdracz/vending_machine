@@ -67,7 +67,7 @@ RSpec.describe VendingMachine do
     it 'print an error message if an invalid coin has been inserted' do
       allow(STDIN).to receive(:gets).and_return('50', '40')
       allow(change).to receive(:insert_coin).with(50)
-      allow(change).to receive(:insert_coin).with(40).and_raise
+      allow(change).to receive(:insert_coin).with(40).and_raise(VendingMachineExceptions::InvalidCoinError)
       allow(STDOUT).to receive(:puts)
       allow(subject).to receive(:loop).and_yield.and_yield
       expect(subject.collect_coins(product)).to eq([50])

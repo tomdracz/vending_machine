@@ -34,7 +34,7 @@ RSpec.describe ChangeHolder do
     end
 
     it 'raises an error if an invalid coin value is provided' do
-      expect { subject.insert_coin(140) }.to raise_error(/Invalid coin provided/)
+      expect { subject.insert_coin(140) }.to raise_error(VendingMachineExceptions::InvalidCoinError, /Invalid coin provided/)
     end
   end
 
@@ -54,11 +54,11 @@ RSpec.describe ChangeHolder do
     end
 
     it 'raises an error if an invalid coin value is provided' do
-      expect { subject.insert_coin(140) }.to raise_error(/Invalid coin provided/)
+      expect { subject.insert_coin(140) }.to raise_error(VendingMachineExceptions::InvalidCoinError, /Invalid coin provided/)
     end
 
     it 'raises an error if the amount of coins requested cannot be returned' do
-      expect { subject.return_coin(50, 100) }.to raise_error(/Cannot return the requested amount of coins/)
+      expect { subject.return_coin(50, 100) }.to raise_error(VendingMachineExceptions::CoinReturnError, /Cannot return the requested amount of coins/)
     end
   end
 end
