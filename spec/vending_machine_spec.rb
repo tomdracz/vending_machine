@@ -82,6 +82,14 @@ RSpec.describe VendingMachine do
       expect(subject.customer_selection).to be_nil
       expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
     end
+
+    it 'prints an error if valid index is provided, but product is sold out' do
+      allow(STDIN).to receive(:gets) { '3' }
+      allow(STDOUT).to receive(:puts)
+      subject.get_customer_selection
+      expect(subject.customer_selection).to be_nil
+      expect(STDOUT).to have_received(:puts).with(/Invalid code selected/)
+    end
   end
 
   describe "#collect_coins" do
