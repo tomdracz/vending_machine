@@ -201,4 +201,32 @@ RSpec.describe VendingMachine do
       expect(STDOUT).to have_received(:puts).with(/Invalid quantity entered. Must be a valid number above 0/)
     end
   end
+
+  describe '#reload_changes' do
+    before(:each) do
+      allow(subject).to receive(:loop).and_yield
+      allow(STDOUT).to receive(:puts)
+      allow(change).to receive(:insert_coin)
+    end
+    it 'asks user for coin value and quantity to reload it by, updating coin quantities' do
+      allow(STDIN).to receive(:gets).and_return('100', '100')
+      subject.reload_change
+      expect(change).to have_received(:insert_coin).once.with(100, 100)
+      expect(STDOUT).to have_received(:puts).with(/Please enter the pence value of coin you wish to reload/)
+      expect(STDOUT).to have_received(:puts).with(/Enter the quantity you are reloading the coins by/)
+      expect(STDOUT).to have_received(:puts).with(/Coins reloaded/)
+    end
+    it 'displays an error message if invalid coin value is entered' do
+      allow(STDIN).to receive(:gets).and_return('40')
+      subject.reload_change
+      expect(change).to_not have_received(:insert_coin)
+      expect(STDOUT).to have_received(:puts).with(/Invalid coin value selected/)
+    end
+    it 'displays an error message if invalid coin quantity is entered' do
+      allow(STDIN).to receive(:gets).and_return('100', '0')
+      subject.reload_change
+      expect(change).to_not have_received(:insert_coin)
+      expect(STDOUT).to have_received(:puts).with(/Invalid quantity entered/)
+    end
+  end
 end
