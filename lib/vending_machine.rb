@@ -3,8 +3,7 @@ require_relative './vending_machine_exceptions'
 class VendingMachine
   include VendingMachineExceptions
 
-  attr_reader :inventory, :change, :selected_product, :inserted_coins
-  attr_accessor :customer_selection
+  attr_reader :inventory, :change, :selected_product, :customer_selection, :inserted_coins
 
   def initialize(inventory, change)
     @inventory = inventory
@@ -67,7 +66,7 @@ class VendingMachine
       dispense_product
       return_change
     end
-    customer_selection = nil
+    @customer_selection = nil
   end
 
   def collect_coins
