@@ -76,6 +76,9 @@ class VendingMachine
   def return_change
     inserted_sum = inserted_coins.sum
     product_price = selected_product.price
+  
+    return if inserted_sum == product_price
+
     returned_change = change.calculate_change(product_price, inserted_sum)
     puts "Here's your change: #{returned_change}"
   end

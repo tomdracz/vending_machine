@@ -156,5 +156,11 @@ RSpec.describe VendingMachine do
       expect(change).to have_received(:calculate_change).with(100, 110)
       expect(STDOUT).to have_received(:puts).with("Here's your change: [10]")
     end
+
+    it 'returns nothing if no change required' do
+      allow(product).to receive(:price) { 110 }
+      expect(change).to_not have_received(:calculate_change)
+      expect(STDOUT).to_not have_received(:puts).with(/Here's your change/)
+    end
   end
 end
