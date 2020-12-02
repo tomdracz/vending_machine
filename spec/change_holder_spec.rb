@@ -61,4 +61,43 @@ RSpec.describe ChangeHolder do
       expect { subject.return_coin(50, 100) }.to raise_error(VendingMachineExceptions::CoinReturnError, /Cannot return the requested amount of coins/)
     end
   end
+
+  describe '#calculate_change' do
+    it 'removes returned coins from the coin holder' do
+      allow(subject).to receive(:return_coin)
+      subject.calculate_change(140, 200)
+      expect(subject).to have_received(:return_coin).once.with(50)
+      expect(subject).to have_received(:return_coin).once.with(10)
+    end
+    it 'returns a change as an array of coin values with highest possible denominations' do
+      expect(subject.calculate_change(140, 200)).to eq([50, 10])
+    end
+    it 'it returns array of coins with lower denominations if higher denominations cannot be found' do
+      coins = {
+        200 => 20,
+        100 => 20,
+        50 => 0,
+        20 => 5,
+        10 => 0,
+        5 => 1,
+        2 => 5,
+        1 => 5
+      }
+      expect(subject.calculate_change(150, 200)).to eq([20, 20, 5, 2, 2, 1])
+    end
+    it 'raises an error if needed change cannot be dispensed' do
+      coins = {
+        200 => 20,
+        100 => 20,
+        50 => 0,
+        20 => 5,
+        10 => 0,
+        5 => 1,
+        2 => 5,
+        1 => 5
+      }
+
+      expect { subject.calculate_change(150, 200) }.to raise_error(VendingMachineExceptions::NotEnoughChange, /Cannot dispense required amount of change/)
+    end
+  end
 end
