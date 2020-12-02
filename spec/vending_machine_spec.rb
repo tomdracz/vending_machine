@@ -22,6 +22,25 @@ RSpec.describe VendingMachine do
     end
   end
 
+  describe "#vend" do
+    it "runs through the vending cycle" do
+      allow(subject).to receive(:display_inventory)
+      allow(subject).to receive(:get_customer_selection)
+      allow(subject).to receive(:collect_coins)
+      allow(subject).to receive(:dispense_product)
+      allow(subject).to receive(:return_change)
+      allow(subject).to receive(:loop).and_yield
+
+      subject.vend
+
+      expect(subject).to have_received(:display_inventory).once
+      expect(subject).to have_received(:get_customer_selection).once
+      expect(subject).to have_received(:collect_coins).once
+      expect(subject).to have_received(:dispense_product).once
+      expect(subject).to have_received(:return_change).once
+    end
+  end
+
   describe '#display_inventory' do
     it 'shows the selection of current products with their prices' do
       expectation = expect { subject.display_inventory }
